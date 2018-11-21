@@ -1,0 +1,28 @@
+/*
+1. 包格式：
+	total_len(u32) + header_len(u32) + CSMessageHeader + msgpayload(例如CSLoginReq)
+
+2. 使用规则：
+	(1) 字段只能加，不能减；
+	(2) 对于线上的版本，为了兼容性增加的字段只能是optional类型，且必须给出default值，最好还有相关说明；
+	(3) 不能改变原来字段的序号。
+
+3. 命名规则：
+	CSXXXXReq/Rsp：以大写CS开头，客户端发来的请求以Req结尾，服务端的相应包以Rsp结尾，
+					中间的XXXX代表对应的功能，比如CSLoginReq/Rsp。
+*/
+syntax = "proto2";
+enum CSMessageConst
+{
+    CS_MSG_MIN_SIZE    = 10;      // 客户端发过来的最小包长
+    CS_MSG_MAX_SIZE    = 205537;  // 客户端发过来的最大包长
+}
+
+// 和客户端通讯的标准报文头部
+message CSMessageHeader
+{
+	required bytes  msg_name = 1;	          // 协议名(如CSLoginAuthDataReq)
+	optional uint32 errcode = 2; 	          // 返回值，客户端发给后台的包可以不赋值
+	optional uint64 gateway_session = 3;      // gateway服务器和online及其login之间标识
+	optional uint32 seq_num = 4;	          // 流水号
+}

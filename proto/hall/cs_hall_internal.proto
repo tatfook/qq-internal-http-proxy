@@ -1,0 +1,29 @@
+//内部服务器访问大厅服务器协议
+syntax = "proto2";
+import public  "cs_msgheader.proto";
+//业务服务器向大厅服务器检测用户的合法性
+message CXIsLoginToHallReq
+{
+	required 	uint32 		uid			= 1;							//大厅服务器返回给客户端的用户id, 全局唯一
+	optional	uint32		channel_id	= 2[default = 0];				//渠道号
+	required	bytes		token		= 3;							//大厅返回给客户端的当前连接session.
+	optional    bool        is_need_user_info = 4[default = false];     //是否需要返回用户的基本信息
+}
+message CXIsLoginToHallRsp
+{
+    message UserInfo
+	{
+		optional	bytes		nickname	= 1;					//QQ昵称, 腾讯返回
+		optional	bytes		gender		= 2;					//性别
+		optional	bytes		figureurl  	= 3;					//头像url
+		optional	bool		is_blue_vip = 4;					//是否蓝钻， ture 代表是
+		optional	bool		is_blue_year_vip 	= 5;			//是否年费蓝钻
+		optional	int32		blue_vip_level	 	= 6;			//蓝钻等级
+		optional	bool		is_super_blue_vip 	= 7;			//是否豪华版蓝钻
+	}
+	required	int32		status	= 1; 							//0 表示已经登录，否则错误状态
+	required 	uint32 		uid			= 2;
+	optional	uint32		channel_id	= 3[default = 0];
+	required	bytes		token		= 4;
+	optional    UserInfo    user_info   = 5;                        //请求包中is_need_user_info置为true时返回
+}

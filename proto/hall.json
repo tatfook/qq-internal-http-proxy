@@ -1,0 +1,123 @@
+{
+  "nested": {
+    "CXIsLoginToHallReq": {
+      "fields": {
+        "uid": {
+          "rule": "required",
+          "type": "uint32",
+          "id": 1
+        },
+        "channelId": {
+          "type": "uint32",
+          "id": 2,
+          "options": {
+            "default": 0
+          }
+        },
+        "token": {
+          "rule": "required",
+          "type": "bytes",
+          "id": 3
+        },
+        "isNeedUserInfo": {
+          "type": "bool",
+          "id": 4,
+          "options": {
+            "default": false
+          }
+        }
+      }
+    },
+    "CXIsLoginToHallRsp": {
+      "fields": {
+        "status": {
+          "rule": "required",
+          "type": "int32",
+          "id": 1
+        },
+        "uid": {
+          "rule": "required",
+          "type": "uint32",
+          "id": 2
+        },
+        "channelId": {
+          "type": "uint32",
+          "id": 3,
+          "options": {
+            "default": 0
+          }
+        },
+        "token": {
+          "rule": "required",
+          "type": "bytes",
+          "id": 4
+        },
+        "userInfo": {
+          "type": "UserInfo",
+          "id": 5
+        }
+      },
+      "nested": {
+        "UserInfo": {
+          "fields": {
+            "nickname": {
+              "type": "bytes",
+              "id": 1
+            },
+            "gender": {
+              "type": "bytes",
+              "id": 2
+            },
+            "figureurl": {
+              "type": "bytes",
+              "id": 3
+            },
+            "isBlueVip": {
+              "type": "bool",
+              "id": 4
+            },
+            "isBlueYearVip": {
+              "type": "bool",
+              "id": 5
+            },
+            "blueVipLevel": {
+              "type": "int32",
+              "id": 6
+            },
+            "isSuperBlueVip": {
+              "type": "bool",
+              "id": 7
+            }
+          }
+        }
+      }
+    },
+    "CSMessageConst": {
+      "values": {
+        "CS_MSG_MIN_SIZE": 10,
+        "CS_MSG_MAX_SIZE": 205537
+      }
+    },
+    "CSMessageHeader": {
+      "fields": {
+        "msgName": {
+          "rule": "required",
+          "type": "bytes",
+          "id": 1
+        },
+        "errcode": {
+          "type": "uint32",
+          "id": 2
+        },
+        "gatewaySession": {
+          "type": "uint64",
+          "id": 3
+        },
+        "seqNum": {
+          "type": "uint32",
+          "id": 4
+        }
+      }
+    }
+  }
+}
