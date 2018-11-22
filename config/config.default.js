@@ -9,8 +9,21 @@ module.exports = appInfo => {
   // add your config here
   config.middleware = [];
 
-  config.tcpServer = {
-    ip: '172.16.0.17',
+  config.cors = {
+    origin: '*',
+  };
+
+  config.security = {
+    xframe: {
+      enable: false,
+    },
+    csrf: {
+      enable: false,
+    },
+  };
+
+  config.qqServer = {
+    host: '172.16.0.17',
     port: 23001
   }
 
