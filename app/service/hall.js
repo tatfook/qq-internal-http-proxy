@@ -1,20 +1,19 @@
 'use strict';
 
-const net = require('net');
 const ProtoBuf = require('protobufjs');
 
 const Service = require('egg').Service;
 
 const hallRoot = ProtoBuf.Root.fromJSON(require('../../proto/hall.json'));
-const CXIsLoginToHallReq = hallRoot.lookupType("CXIsLoginToHallReq");
-const CXIsLoginToHallRsp = hallRoot.lookupType("CXIsLoginToHallRsp");
-const CSMessageHeader = hallRoot.lookupType("CSMessageHeader");
+const CXIsLoginToHallReq = hallRoot.lookupType('CXIsLoginToHallReq');
+const CXIsLoginToHallRsp = hallRoot.lookupType('CXIsLoginToHallRsp');
+const CSMessageHeader = hallRoot.lookupType('CSMessageHeader');
 
 class HallService extends Service {
   async isLoginToHall(options) {
     const msgHeader = {
       msgName: 'CXIsLoginToHallReq',
-      gatewaySession: Date.now()
+      gatewaySession: Date.now(),
     };
     const req = {
       uid: options.uid,
@@ -23,22 +22,19 @@ class HallService extends Service {
       isNeedUserInfo: options.isNeedUserInfo,
     };
 
-    const headerBuf = CSMessageHeader.encode(msgHeader).finish();
-    const reqBuf = CXIsLoginToHallReq.encode(req).finish();
+    const headerBuf = CSMessageHeader.encode(CSMessageHeader.create(msgHeader)).finish();
+    const reqBuf = CXIsLoginToHallReq.encode(CXIsLoginToHallReq.create(req)).finish();
     const headerLen = headerBuf.length + 4;
     const totalLen = reqBuf.length + headerLen + 4;
+    const headerLenBuf = Buffer.allocUnsafe(4).writeUInt32LE(headerLen);
+    const totalLenBuf = Buffer.allocUnsafe(4).writeUInt32LE(totalLen);
 
-    const message = totalLen + '' + headerLen + headerBuf + reqBuf;
-    const client = net.Socket();
-    await client.connect({
-      host: this.config.qqServer.host,
-      port: this.config.qqServer.port,
-    })
-    await client.write(message);
-    const data = await client.on('data');
-    await client.destroy();
-    const res = CXIsLoginToHallRsp.decode(data);
-    return res;
+    const message = totalLenBuf + headerLenBuf + headerBuf + reqBuf;
+    console.log(message);
+    const data = await this.ctx.service.game.sendMessage(message);
+    console.log(data);
+
+    return data;
   }
 }
 

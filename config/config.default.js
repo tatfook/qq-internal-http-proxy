@@ -22,10 +22,10 @@ module.exports = appInfo => {
     },
   };
 
-  config.qqServer = {
+  config.gameServer = {
     host: '172.16.0.17',
-    port: 23001
-  }
+    port: 23001,
+  };
 
   return config;
 };
