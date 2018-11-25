@@ -8,6 +8,7 @@
     "egg-cors": "^2.1.1",
     "egg-parameters": "^0.1.0",
     "egg-scripts": "^2.5.0",
+    "js-base64": "^2.4.9",
     "protobufjs": "^6.8.8"
   },
   "devDependencies": {
