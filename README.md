@@ -18,7 +18,7 @@ $ open http://localhost:7001/
 
 rebuild proto
 ```bash
-$ node_modules/protobufjs/bin/pbjs proto/hall/*.proto > proto/hall.json
+$ node_modules/protobufjs/bin/pbjs --keep-case proto/hall/*.proto > proto/hall.json
 ```
 
 ### Deploy

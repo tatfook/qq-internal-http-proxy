@@ -7,7 +7,7 @@
           "type": "uint32",
           "id": 1
         },
-        "channelId": {
+        "channel_id": {
           "type": "uint32",
           "id": 2,
           "options": {
@@ -19,7 +19,7 @@
           "type": "bytes",
           "id": 3
         },
-        "isNeedUserInfo": {
+        "is_need_user_info": {
           "type": "bool",
           "id": 4,
           "options": {
@@ -40,7 +40,7 @@
           "type": "uint32",
           "id": 2
         },
-        "channelId": {
+        "channel_id": {
           "type": "uint32",
           "id": 3,
           "options": {
@@ -52,7 +52,7 @@
           "type": "bytes",
           "id": 4
         },
-        "userInfo": {
+        "user_info": {
           "type": "UserInfo",
           "id": 5
         }
@@ -72,19 +72,19 @@
               "type": "bytes",
               "id": 3
             },
-            "isBlueVip": {
+            "is_blue_vip": {
               "type": "bool",
               "id": 4
             },
-            "isBlueYearVip": {
+            "is_blue_year_vip": {
               "type": "bool",
               "id": 5
             },
-            "blueVipLevel": {
+            "blue_vip_level": {
               "type": "int32",
               "id": 6
             },
-            "isSuperBlueVip": {
+            "is_super_blue_vip": {
               "type": "bool",
               "id": 7
             }
@@ -100,7 +100,7 @@
     },
     "CSMessageHeader": {
       "fields": {
-        "msgName": {
+        "msg_name": {
           "rule": "required",
           "type": "bytes",
           "id": 1
@@ -109,11 +109,11 @@
           "type": "uint32",
           "id": 2
         },
-        "gatewaySession": {
+        "gateway_session": {
           "type": "uint64",
           "id": 3
         },
-        "seqNum": {
+        "seq_num": {
           "type": "uint32",
           "id": 4
         }

@@ -4,7 +4,7 @@ const Controller = require('egg').Controller;
 
 class HallController extends Controller {
   async isLogin() {
-    const options = this.ctx.params.permit('uid', 'channelId', 'token', 'isNeedUserInfo');
+    const options = this.ctx.params.permit('uid', 'channel_id', 'token', 'is_need_user_info');
     try {
       this.ctx.body = await this.ctx.service.hall.isLoginToHall(options);
     } catch (err) {
