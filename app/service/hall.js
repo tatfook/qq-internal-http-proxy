@@ -25,8 +25,8 @@ class HallService extends Service {
   async decode(data) {
     const totalLen = data.readUInt32LE(4, 0);
     const headerLen = data.readUInt32LE(4, 4);
-    const headerBuf = data.readUInt32LE(headerLen - 4, 8);
-    const rspBuf = data.readUInt32LE(totalLen - headerLen, 4 + headerLen);
+    const headerBuf = data.slice(8, headerLen + 4);
+    const rspBuf = data.slice(4 + headerLen, totalLen);
     return {
       headerBuf,
       rspBuf,
