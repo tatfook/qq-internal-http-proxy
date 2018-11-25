@@ -2,7 +2,6 @@
 
 const ProtoBuf = require('protobufjs');
 const Base64 = require('js-base64').Base64;
-const uuid = require('uuid/v4');
 const Service = require('egg').Service;
 
 const hallRoot = ProtoBuf.Root.fromJSON(require('../../proto/hall.json'));
@@ -53,7 +52,7 @@ class HallService extends Service {
       token: Base64.encode(options.token),
       is_need_user_info: options.is_need_user_info,
     };
-    const gatewaySession = uuid();
+    const gatewaySession = Date.now();
     const msgHeader = {
       msg_name: Base64.encode('CXIsLoginToHallReq'),
       gateway_session: gatewaySession,
@@ -62,7 +61,7 @@ class HallService extends Service {
     const reqBuf = CXIsLoginToHallReq.encode(req).finish();
     const message = await this.service.hall.encode(msgHeader, reqBuf);
 
-    const rspBuf = await this.service.sendMessage(message);
+    const rspBuf = await this.service.hall.sendMessage(message);
     const decoded = CXIsLoginToHallRsp.decode(rspBuf);
     return decoded;
   }
