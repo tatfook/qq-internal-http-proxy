@@ -34,8 +34,8 @@ class GameService extends Service {
   }
 
   async decode(data) {
-    const totalLen = data.readUInt32LE(4, 0);
-    const headerLen = data.readUInt32LE(4, 4);
+    const totalLen = data.slice(0, 4).readUInt32LE(0);
+    const headerLen = data.slice(4, 8).readUInt32LE(0);
     const headerBuf = data.slice(8, headerLen + 4);
     const rspBuf = data.slice(4 + headerLen, totalLen);
     return {
@@ -46,18 +46,20 @@ class GameService extends Service {
 
   async sendMessage(msgHeader, reqBuf) {
     const message = await this.service.game.encode(msgHeader, reqBuf);
-    console.log('send: ', message);
+    // console.log('send: ', message);
     const data = await this.service.game.send(message);
-    console.log('return: ', data);
+    // console.log('return: ', data);
     const {
       headerBuf,
       rspBuf,
     } = await this.service.game.decode(data);
     const rspHeader = CSMessageHeader.decode(headerBuf);
     if (rspHeader.errcode) throw new Error('Hall Error: ', rspHeader.errcode);
+    // console.log('rspHeader: ', JSON.stringify(rspHeader));
     const rspClassName = rspHeader.msg_name.toString();
-    console.log('rspClassName: ', rspClassName);
+    // console.log('rspClassName: ', rspClassName);
     const decoded = Root.lookupType(rspClassName).decode(rspBuf);
+    // console.log('decoded: ', JSON.stringify(decoded));
     return decoded;
   }
 
