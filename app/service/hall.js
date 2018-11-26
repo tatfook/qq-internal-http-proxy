@@ -5,20 +5,14 @@ const Service = require('egg').Service;
 
 class HallService extends Service {
   async isLoginToHall(options) {
-    const req = {
+    const reqData = {
       uid: options.uid,
       channel_id: options.channel_id,
       token: Base64.encode(options.token),
       is_need_user_info: options.is_need_user_info,
     };
-    const gatewaySession = `${Date.now()}${Math.ceil(Math.random() * 100)}`;
-    const msgHeader = {
-      msg_name: Base64.encode('CXIsLoginToHallReq'),
-      gateway_session: gatewaySession,
-    };
-    const CXIsLoginToHallReq = await this.service.game.getProtoClass('CXIsLoginToHallReq');
-    const reqBuf = CXIsLoginToHallReq.encode(req).finish();
-    const decoded = await this.service.game.sendMessage(msgHeader, reqBuf);
+    const client = await this.app.hallClientManager();
+    const decoded = await client.send('CXIsLoginToHallReq', reqData);
     return decoded;
   }
 }
