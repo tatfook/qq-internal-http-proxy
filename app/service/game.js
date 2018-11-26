@@ -2,7 +2,6 @@
 
 const net = require('net');
 const ProtoBuf = require('protobufjs');
-const Base64 = require('js-base64').Base64;
 const Service = require('egg').Service;
 
 const Root = ProtoBuf.Root.fromJSON(require('../../proto/hall.json'));
@@ -55,12 +54,10 @@ class GameService extends Service {
       rspBuf,
     } = await this.service.game.decode(data);
     const rspHeader = CSMessageHeader.decode(headerBuf);
-    console.log('decoded rspHeader: ', rspHeader);
     if (rspHeader.errcode) throw new Error('Hall Error: ', rspHeader.errcode);
-    const rspClassName = Base64.decode(rspHeader.msg_name.toString());
+    const rspClassName = rspHeader.msg_name.toString();
     console.log('rspClassName: ', rspClassName);
     const decoded = Root.lookupType(rspClassName).decode(rspBuf);
-    console.log('decoded: ', JSON.stringify(decoded));
     return decoded;
   }
 

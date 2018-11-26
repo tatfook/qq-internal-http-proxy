@@ -16,7 +16,7 @@ class HallService extends Service {
       msg_name: Base64.encode('CXIsLoginToHallReq'),
       gateway_session: gatewaySession,
     };
-    const CXIsLoginToHallReq = this.service.game.getProtoClass('CXIsLoginToHallReq');
+    const CXIsLoginToHallReq = await this.service.game.getProtoClass('CXIsLoginToHallReq');
     const reqBuf = CXIsLoginToHallReq.encode(req).finish();
     const decoded = await this.service.game.sendMessage(msgHeader, reqBuf);
     return decoded;
