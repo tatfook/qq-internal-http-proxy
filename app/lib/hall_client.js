@@ -59,7 +59,7 @@ class HallClient {
     headerLenBuf.writeUInt32LE(headerLen);
     const totalLenBuf = Buffer.allocUnsafe(4);
     totalLenBuf.writeUInt32LE(totalLen);
-    const message = Buffer.concat([ totalLenBuf, headerLenBuf, headerBuf, reqBuf ], totalLen);
+    const message = Buffer.concat([ totalLenBuf, headerLenBuf, headerBuf, reqBuf ]);
     return message;
   }
 
@@ -76,12 +76,13 @@ class HallClient {
 
   async sendMessage(reqType, reqData) {
     const reqProtoClass = Root.lookupType(reqType);
+    if (!reqProtoClass) throw new Error('Invalide reqType: ', reqType);
     const gatewaySession = this.generateGatewaySession();
     const msgHeader = {
       msg_name: Base64.encode(reqType),
       gateway_session: gatewaySession,
     };
-    const reqBuf = reqProtoClass.encode(reqData);
+    const reqBuf = reqProtoClass.encode(reqData).finish();
     const message = await this.encode(msgHeader, reqBuf);
     this.client.write(message);
     return new Promise(resolve => this.callbacks.set(gatewaySession, data => resolve(data)));
@@ -96,7 +97,7 @@ class HallClient {
   }
 
   waitingListSize() {
-    return this.callbacks.length();
+    return this.callbacks.length;
   }
 }
 
