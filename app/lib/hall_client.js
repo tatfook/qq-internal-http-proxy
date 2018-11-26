@@ -10,7 +10,7 @@ class HallClient {
   constructor(host, port) {
     this.host = host;
     this.port = port;
-    this.callbacks = new Map();
+    this.callbackMap = new Map();
   }
 
   async init() {
@@ -19,7 +19,7 @@ class HallClient {
       host: this.host,
       port: this.port,
     });
-    this.client.on('data', this.parseFeedback);
+    this.client.on('data', data => this.parseFeedback(data));
   }
 
   async parseFeedback(data) {
@@ -27,11 +27,11 @@ class HallClient {
       const {
         headerBuf,
         rspBuf,
-      } = this.decode(data);
+      } = await this.decode(data);
       const rspHeader = CSMessageHeader.decode(headerBuf);
-      const gatewaySession = rspHeader.gateway_session;
-      const callback = this.callbacks.get(gatewaySession);
-      this.callbacks.delete(gatewaySession);
+      const gatewaySession = rspHeader.gateway_session.toString();
+      const callback = this.callbackMap.get(gatewaySession);
+      this.callbackMap.delete(gatewaySession);
       if (!callback) {
         console.error('Missing callback for session ', gatewaySession);
         return;
@@ -85,19 +85,19 @@ class HallClient {
     const reqBuf = reqProtoClass.encode(reqData).finish();
     const message = await this.encode(msgHeader, reqBuf);
     this.client.write(message);
-    return new Promise(resolve => this.callbacks.set(gatewaySession, data => resolve(data)));
+    return new Promise(resolve => this.callbackMap.set(gatewaySession, data => resolve(data)));
   }
 
   generateGatewaySession() {
     let gatewaySession = `${Date.now()}${Math.ceil(Math.random() * 100)}`;
-    while (this.callbacks.get(gatewaySession)) {
+    while (this.callbackMap.get(gatewaySession)) {
       gatewaySession = `${Date.now()}${Math.ceil(Math.random() * 100)}`;
     }
     return gatewaySession;
   }
 
   waitingListSize() {
-    return this.callbacks.length;
+    return this.callbackMap.length;
   }
 }
 
