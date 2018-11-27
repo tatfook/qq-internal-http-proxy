@@ -25,7 +25,7 @@ module.exports = appInfo => {
   config.gameClientManager = {
     host: '172.16.0.17',
     port: 23001,
-    concurrency: 4,
+    concurrency: 2,
   };
 
   return config;

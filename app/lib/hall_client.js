@@ -12,7 +12,12 @@ class HallClient {
     this.host = host;
     this.port = port;
     this.callbackMap = new Map();
-    this.messageQueue = new queue(this.send);
+    const sleep = n => new Promise(resolve => setTimeout(resolve, n));
+    this.messageQueue = new queue(async (data, next) => {
+      this.send(data);
+      await sleep(0);
+      next();
+    });
   }
 
   async init() {
@@ -90,7 +95,7 @@ class HallClient {
     };
     const reqBuf = reqProtoClass.encode(reqData).finish();
     const message = await this.encode(msgHeader, reqBuf);
-    this.queue.push(message);
+    this.messageQueue.push(message);
     return new Promise(resolve => this.callbackMap.set(gatewaySession, data => resolve(data)));
   }
 
