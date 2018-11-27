@@ -2,6 +2,7 @@
 const net = require('net');
 const ProtoBuf = require('protobufjs');
 const Base64 = require('js-base64').Base64;
+const queue = require('async/queue');
 
 const Root = ProtoBuf.Root.fromJSON(require('../../proto/hall.json'));
 const CSMessageHeader = Root.lookupType('CSMessageHeader');
@@ -11,6 +12,7 @@ class HallClient {
     this.host = host;
     this.port = port;
     this.callbackMap = new Map();
+    this.messageQueue = new queue(this.send);
   }
 
   async init() {
@@ -20,6 +22,10 @@ class HallClient {
       port: this.port,
     });
     this.client.on('data', data => this.parseFeedback(data));
+  }
+
+  async send(message) {
+    this.client.write(message);
   }
 
   async parseFeedback(data) {
@@ -84,7 +90,7 @@ class HallClient {
     };
     const reqBuf = reqProtoClass.encode(reqData).finish();
     const message = await this.encode(msgHeader, reqBuf);
-    this.client.write(message);
+    this.queue.push(message);
     return new Promise(resolve => this.callbackMap.set(gatewaySession, data => resolve(data)));
   }
 
@@ -97,7 +103,7 @@ class HallClient {
   }
 
   waitingListSize() {
-    return this.callbackMap.length;
+    return this.callbackMap.size;
   }
 }
 
