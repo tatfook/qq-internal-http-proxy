@@ -4,6 +4,7 @@
   "description": "",
   "private": true,
   "dependencies": {
+    "async": "^2.6.1",
     "egg": "^2.2.1",
     "egg-cors": "^2.1.1",
     "egg-parameters": "^0.1.0",
